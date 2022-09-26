@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1662391814875-1" author="SzantoGaborCC">
+        <createTable tableName="departments">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_departments"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+            </column>
+            <column name="created_by" type="INT">
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+            </column>
+            <column name="updated_by" type="INT">
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="manager_id" type="INT">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1662391814875-2" author="SzantoGaborCC">
+        <createTable tableName="employees">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_employees"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+            </column>
+            <column name="created_by" type="INT">
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+            </column>
+            <column name="updated_by" type="INT">
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(66)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dep_id" type="INT">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1662391814875-3" author="SzantoGaborCC">
+        <addUniqueConstraint columnNames="email" constraintName="uc_employees_email" tableName="employees"/>
+    </changeSet>
+    <changeSet id="1662391814875-4" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="departments"
+                                 constraintName="FK_DEPARTMENTS_ON_CREATED_BY" referencedColumnNames="id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1662391814875-5" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="manager_id" baseTableName="departments"
+                                 constraintName="FK_DEPARTMENTS_ON_MANAGER" referencedColumnNames="id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1662391814875-6" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="departments"
+                                 constraintName="FK_DEPARTMENTS_ON_UPDATED_BY" referencedColumnNames="id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1662391814875-7" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="employees"
+                                 constraintName="FK_EMPLOYEES_ON_CREATED_BY" referencedColumnNames="id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1662391814875-8" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="dep_id" baseTableName="employees" constraintName="FK_EMPLOYEES_ON_DEP"
+                                 referencedColumnNames="id" referencedTableName="departments"/>
+    </changeSet>
+    <changeSet id="1662391814875-9" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="updated_by" baseTableName="employees"
+                                 constraintName="FK_EMPLOYEES_ON_UPDATED_BY" referencedColumnNames="id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1662391814875-10" author="SzantoGaborCC">
+        <addColumn tableName="employees">
+            <column name="is_active" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1662391814875-11" author="SzantoGaborCC">
+        <createTable tableName="employee_roles">
+            <column name="employee_id"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role"
+                    type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1662391814875-12" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="employee_roles"
+                                 constraintName="fk_employee_roles_on_employee"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1662391814875-13" author="SzantoGaborCC">
+        <createTable tableName="refresh_token">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false"
+                             primaryKey="true"
+                             primaryKeyName="pk_refresh_token"/>
+            </column>
+            <column name="employee_id"
+                    type="INT"/>
+            <column name="token"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date"
+                    type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1662391814875-14" author="SzantoGaborCC">
+        <addUniqueConstraint columnNames="token"
+                             constraintName="uc_refresh_token_token"
+                             tableName="refresh_token"/>
+    </changeSet>
+    <changeSet id="1662391814875-15" author="SzantoGaborCC">
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="refresh_token"
+                                 constraintName="FK_REFRESH_TOKEN_ON_EMPLOYEE"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+</databaseChangeLog>
